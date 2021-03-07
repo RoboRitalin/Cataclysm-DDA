@@ -504,6 +504,11 @@
     "id": "FISH_TRAP",
     "name": { "str": "Set" }
   },
+    {
+    "type": "item_action",
+    "id": "SMALL_GAME_TRAP",
+    "name": { "str": "Set" }
+  },
   {
     "type": "item_action",
     "id": "FLUMED",

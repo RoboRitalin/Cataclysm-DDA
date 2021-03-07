@@ -1,5 +1,17 @@
 [
   {
+    "id": "TREE_REQUIRED",
+    "type": "json_flag",
+    "context": [  ]
+	"//": "Must be set up adjacent to a tree (e.g. as engine for hunting snares)."
+  },
+  {
+    "id": "YOUNG_TREE_REQUIRED",
+    "type": "json_flag",
+    "context": [  ]
+	"//": "Must be set up adjacent to a young tree (e.g. as engine for hunting snares)."
+  },
+  {
     "id": "ACTIVE_CLOAKING",
     "type": "json_flag",
     "context": [ "ARMOR", "TOOL_ARMOR" ],

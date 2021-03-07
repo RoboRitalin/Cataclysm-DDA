@@ -38,7 +38,7 @@
     "special_attacks": [ { "type": "bite", "cooldown": 15 } ],
     "fear_triggers": [ "SOUND", "PLAYER_CLOSE" ],
     "death_function": [ "NORMAL" ],
-    "flags": [ "SEES", "SMELLS", "HEARS", "GOODHEARING", "WARM", "FLIES", "ANIMAL", "PATH_AVOID_DANGER_1" ]
+    "flags": [ "SEES", "SMELLS", "HEARS", "GOODHEARING", "WARM", "FLIES", "ANIMAL", "PATH_AVOID_DANGER_1", "TRAPPABLE" ]
   },
   {
     "id": "mon_bear_cub",

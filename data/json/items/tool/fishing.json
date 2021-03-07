@@ -1,4 +1,22 @@
 [
+   {
+    "id": "small_game_trap",
+    "type": "TOOL",
+    "name": { "str": "small game snare trap" },
+    "description": "Snare trap for catching small game.",
+    "weight": "85 g",
+    "volume": "2 L",
+    "price": 500,
+    "price_postapoc": 50,
+    "to_hit": -2,
+    "material": [ "plastic" ],
+    "symbol": ";",
+    "color": "green",
+    "ammo": [ "fish_bait" ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fish_bait": 1 } } ],
+    "max_charges": 1,
+    "use_action": [ "SMALL_GAME_TRAP" ]
+  },
   {
     "id": "fish_trap",
     "type": "TOOL",
