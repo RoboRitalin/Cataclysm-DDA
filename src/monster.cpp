@@ -96,6 +96,7 @@ static const efftype_id effect_venom_player1( "venom_player1" );
 static const efftype_id effect_venom_player2( "venom_player2" );
 static const efftype_id effect_venom_weaken( "venom_weaken" );
 static const efftype_id effect_webbed( "webbed" );
+static const efftype_id effect_immobile("immobile");
 
 static const itype_id itype_corpse( "corpse" );
 static const itype_id itype_milk( "milk" );
@@ -1932,6 +1933,9 @@ bool monster::move_effects( bool )
             }
             remove_effect( effect_grabbed );
         }
+    }
+    if (has_effect(effect_immobile)) {
+        return false;
     }
     return true;
 }

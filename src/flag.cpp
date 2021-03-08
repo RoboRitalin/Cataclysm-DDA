@@ -322,6 +322,7 @@ const flag_id flag_MUTE( "MUTE" );
 const flag_id flag_NOT_FOOTWEAR( "NOT_FOOTWEAR" );
 const flag_id flag_SOFT( "SOFT" );
 const flag_id flag_HARD( "HARD" );
+const flag_id flag_YOUNG_TREE_REQUIRED( "YOUNG_TREE_REQUIRED" );
 
 namespace
 {

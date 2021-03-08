@@ -329,6 +329,7 @@ extern const flag_id flag_MUTE;
 extern const flag_id flag_NOT_FOOTWEAR;
 extern const flag_id flag_SOFT;
 extern const flag_id flag_HARD;
+extern const flag_id flag_YOUNG_TREE_REQUIRED;
 
 /**
  * Flags: json entity with "type": "json_flag", defined in flags.json, vp_flags.json

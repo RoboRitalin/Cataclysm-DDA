@@ -10,6 +10,12 @@
     "name": [ "Hit By Player" ],
     "desc": [ "AI tag for when monsters are hit by player.  This is a bug if you have it." ]
   },
+  {    
+    "type": "effect_type",
+    "id": "immobile",
+    "name": [ "Immobile" ],
+    "desc": [ "Monster cannot move." ]
+  },
   {
     "type": "effect_type",
     "id": "ridden",

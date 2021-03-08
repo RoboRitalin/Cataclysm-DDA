@@ -228,6 +228,7 @@ static const efftype_id effect_weak_antibiotic( "weak_antibiotic" );
 static const efftype_id effect_weak_antibiotic_visible( "weak_antibiotic_visible" );
 static const efftype_id effect_webbed( "webbed" );
 static const efftype_id effect_weed_high( "weed_high" );
+static const efftype_id effect_immobile("immobile");
 
 static const itype_id itype_adv_UPS_off( "adv_UPS_off" );
 static const itype_id itype_UPS( "UPS" );
@@ -2031,7 +2032,7 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
 
         //check neighbors for required terrain
         if (!here.has_nearby_ter(pnt, t_tree_young, 1)) {
-            p->add_msg_if_player(m_info, _("Must be adjacent to specific terrain."));
+            p->add_msg_if_player(m_info, _("Must be placed adjacent to a young tree."));
             return 0;
         }
 
@@ -2051,7 +2052,7 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
             it->active = false;
             return 0;
         }
-        if (it->age() > 1_hours) {
+        if (it->age() > 24_hours) {
             it->active = false;
 
             int success = -3;
@@ -2076,12 +2077,12 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
                 return 0;
             }
 
-            tripoint_abs_omt foo2 = tripoint_abs_omt(pos);
-            oter_id sna = overmap_buffer.ter(foo2);
-            overmap_static_spawns fu = sna->get_static_spawns();
-            std::vector<mtype_id> herp = MonsterGroupManager::GetMonstersFromGroup(fu.group);
+            tripoint_abs_omt pos_omt = tripoint_abs_omt(pos);
+            oter_id overmap_ter = overmap_buffer.ter(pos_omt);
+            overmap_static_spawns mon_group = overmap_ter->get_static_spawns();
+            std::vector<mtype_id> all_monsters = MonsterGroupManager::GetMonstersFromGroup(mon_group.group);
             std::vector<mtype_id> available_game;
-            for (mtype_id monster : herp) {
+            for (const auto& monster : all_monsters) {
                 if (monster->has_flag(MF_TRAPPABLE)) {
                     available_game.push_back(monster);
                 }
@@ -2091,8 +2092,19 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
                 p->practice(skill_survival, rng(3, 10));
 
                 const mtype_id& chosen_game = random_entry_ref(available_game);
-                here.add_item_or_charges(pos, item::make_corpse(chosen_game, it->birthday() + rng(0_turns,
-                    1_hours)));
+
+                //Spawn trapped animal and make it unable to move...
+                if (x_in_y(chosen_game->melee_dice * chosen_game->melee_sides, 12)) {
+                    g->place_critter_at(chosen_game, pos);
+                    monster* const mon_ptr = g->critter_at<monster>(pos, true);
+                    monster& critter = *mon_ptr;
+                    critter.add_effect(effect_immobile, 7_days);
+                }
+                //...or if it wasn't tough enough to survive, spawn its corpse.
+                else {
+                    here.add_item_or_charges(pos, item::make_corpse(chosen_game, it->birthday() + rng(0_turns,
+                        24_hours)));                    
+                }
             }
             it->ammo_consume(bait_consumed, pos);
         }

@@ -77,6 +77,7 @@ static const efftype_id effect_stunned( "stunned" );
 static const efftype_id effect_sensor_stun( "sensor_stun" );
 static const efftype_id effect_tied( "tied" );
 static const efftype_id effect_zapped( "zapped" );
+static const efftype_id effect_immobile("immobile");
 
 static const species_id species_ROBOT( "ROBOT" );
 

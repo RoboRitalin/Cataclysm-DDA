@@ -32,6 +32,7 @@ static const efftype_id effect_in_pit( "in_pit" );
 static const efftype_id effect_lightsnare( "lightsnare" );
 static const efftype_id effect_tied( "tied" );
 static const efftype_id effect_webbed( "webbed" );
+static const efftype_id effect_immobile("immobile");
 static const efftype_id effect_weed_high( "weed_high" );
 
 static const itype_id itype_holybook_bible( "holybook_bible" );
@@ -1250,6 +1251,7 @@ static const std::unordered_set<efftype_id> hardcoded_movement_impairing = {{
         effect_lightsnare,
         effect_tied,
         effect_webbed,
+        effect_immobile,
     }
 };
 
