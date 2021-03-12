@@ -174,7 +174,8 @@ enum m_flag : int {
     MF_DROPS_AMMO,          // This monster drops ammo. Should not be set for monsters that use pseudo ammo.
     MF_INSECTICIDEPROOF,    // This monster is immune to insecticide, even though it's made of bug flesh
     MF_RANGED_ATTACKER,     // This monster has any sort of ranged attack
-    MF_TRAPPABLE,           // This monster can be caught in hunting traps.
+    MF_TRAPPABLE_SMALL,		// This monster is considered small game (for hunting traps).
+    MF_TRAPPABLE_BIG,       // This monster is considered big game (for hunting traps).
     MF_MAX                  // Sets the length of the flags - obviously must be LAST
     
 };

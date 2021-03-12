@@ -123,6 +123,7 @@ cata::optional<int> firecracker_pack( player *, item *, bool, const tripoint & )
 cata::optional<int> firecracker_pack_act( player *, item *, bool, const tripoint & );
 cata::optional<int> fish_trap( player *, item *, bool, const tripoint & );
 cata::optional<int> small_game_trap(player* p, item* it, bool t, const tripoint& pos);
+cata::optional<int> big_game_trap(player* p, item* it, bool t, const tripoint& pos);
 cata::optional<int> fishing_rod( player *, item *, bool, const tripoint & );
 cata::optional<int> fitness_check( player *p, item *it, bool, const tripoint & );
 cata::optional<int> foodperson( player *, item *, bool, const tripoint & );

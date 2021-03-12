@@ -2041,7 +2041,7 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
         here.add_item_or_charges(pnt, *it);
         p->i_rem(it);
         p->add_msg_if_player(m_info,
-            _("You place the snare trap; in a day or so, you may catch some small game."));
+            _("You place the snare trap; in a day or so, you may catch some game."));
 
         return 0;
 
@@ -2083,7 +2083,7 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
             std::vector<mtype_id> all_monsters = MonsterGroupManager::GetMonstersFromGroup(mon_group.group);
             std::vector<mtype_id> available_game;
             for (const auto& monster : all_monsters) {
-                if (monster->has_flag(MF_TRAPPABLE)) {
+                if (monster->has_flag(MF_TRAPPABLE_SMALL)) {
                     available_game.push_back(monster);
                 }
             }
@@ -2098,12 +2098,124 @@ cata::optional<int> iuse::small_game_trap(player* p, item* it, bool t, const tri
                     g->place_critter_at(chosen_game, pos);
                     monster* const mon_ptr = g->critter_at<monster>(pos, true);
                     monster& critter = *mon_ptr;
-                    critter.add_effect(effect_immobile, 7_days);
+                    critter.add_effect(effect_immobile, 24_hours);
                 }
                 //...or if it wasn't tough enough to survive, spawn its corpse.
                 else {
                     here.add_item_or_charges(pos, item::make_corpse(chosen_game, it->birthday() + rng(0_turns,
                         24_hours)));                    
+                }
+            }
+            it->ammo_consume(bait_consumed, pos);
+        }
+        return 0;
+    }
+}
+
+cata::optional<int> iuse::big_game_trap(player* p, item* it, bool t, const tripoint& pos)
+{
+    map& here = get_map();
+    if (!t) {
+        // Handle deploying hunting trap.
+        if (it->active) {
+            it->active = false;
+            return 0;
+        }
+
+        if (p->is_mounted()) {
+            p->add_msg_if_player(m_info, _("You can't do that while mounted."));
+            return 0;
+        }
+        if (p->is_underwater()) {
+            p->add_msg_if_player(m_info, _("You can't do that while underwater."));
+            return 0;
+        }
+
+        if (it->ammo_remaining() == 0) {
+            p->add_msg_if_player(_("Animals aren't foolish enough to go in here without bait."));
+            return 0;
+        }
+
+        const cata::optional<tripoint> pnt_ = choose_adjacent(_("Put snare trap where?"));
+        if (!pnt_) {
+            return 0;
+        }
+        const tripoint pnt = *pnt_;
+
+        //check neighbors for required terrain
+        if (!here.has_nearby_ter(pnt, t_tree, 1)) {
+            p->add_msg_if_player(m_info, _("Must be placed adjacent to a tree."));
+            return 0;
+        }
+
+        it->active = true;
+        it->set_age(0_turns);
+        here.add_item_or_charges(pnt, *it);
+        p->i_rem(it);
+        p->add_msg_if_player(m_info,
+            _("You place the snare trap; in a day or so, you may catch some game."));
+
+        return 0;
+
+    }
+    else {
+        // Handle processing trap over time.
+        if (it->ammo_remaining() == 0) {
+            it->active = false;
+            return 0;
+        }
+        if (it->age() > 24_hours) {
+            it->active = false;
+
+            int success = -3;
+            const int surv = p->get_skill_level(skill_survival);
+            success += rng(surv, surv * surv);
+
+            int bait_consumed = 1;
+
+            int game_caught = 0;
+
+            if (success < 0) {
+                game_caught = 0;
+            }
+            else {
+                game_caught = 1;
+            }
+
+            if (game_caught == 0) {
+                it->ammo_consume(it->ammo_remaining(), pos);
+                p->practice(skill_survival, rng(5, 15));
+
+                return 0;
+            }
+
+            tripoint_abs_omt pos_omt = tripoint_abs_omt(pos);
+            oter_id overmap_ter = overmap_buffer.ter(pos_omt);
+            overmap_static_spawns mon_group = overmap_ter->get_static_spawns();
+            std::vector<mtype_id> all_monsters = MonsterGroupManager::GetMonstersFromGroup(mon_group.group);
+            std::vector<mtype_id> available_game;
+            for (const auto& monster : all_monsters) {
+                if (monster->has_flag(MF_TRAPPABLE_BIG)) {
+                    available_game.push_back(monster);
+                }
+            }
+
+            for (int i = 0; i < game_caught; i++) {
+                p->practice(skill_survival, rng(3, 10));
+
+                const mtype_id& chosen_game = random_entry_ref(available_game);
+
+                //Spawn trapped animal and make it unable to move...
+                if (x_in_y(chosen_game->melee_dice * chosen_game->melee_sides, 18)) {
+                    g->place_critter_at(chosen_game, pos);
+                    monster* const mon_ptr = g->critter_at<monster>(pos, true);
+                    monster& critter = *mon_ptr;
+                    critter.add_effect(effect_immobile, 24_hours);
+                }
+                //...or if it wasn't tough enough to survive, spawn its corpse.
+                else {
+                    here.add_item_or_charges(pos, item::make_corpse(chosen_game, it->birthday() + rng(0_turns,
+                        24_hours)));
                 }
             }
             it->ammo_consume(bait_consumed, pos);
