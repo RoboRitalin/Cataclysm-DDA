@@ -184,7 +184,8 @@ std::string enum_to_string<m_flag>( m_flag data )
         case MF_DROPS_AMMO: return "DROPS_AMMO";
         case MF_INSECTICIDEPROOF: return "INSECTICIDEPROOF";
         case MF_RANGED_ATTACKER: return "RANGED_ATTACKER";
-        case MF_TRAPPABLE: return "TRAPPABLE";
+        case MF_TRAPPABLE_SMALL: return "TRAPPABLE_SMALL";
+        case MF_TRAPPABLE_BIG: return "TRAPPABLE_BIG";
         // *INDENT-ON*
         case m_flag::MF_MAX:
             break;
